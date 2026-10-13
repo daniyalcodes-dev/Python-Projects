@@ -37,7 +37,7 @@ for q in questions:
     for i,option in enumerate(q["options"], start = 1):
         print(f"{i}.{option}")
 
-    ans = input("Enter the answer: ")
+    ans = input("Enter the answer(as 1,2,3,4): ")
     if ans == q["answer"]:
         print("Correct✅")
         score += 1

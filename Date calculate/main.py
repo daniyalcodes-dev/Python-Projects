@@ -5,9 +5,11 @@ print("Please enter the date in this format YYYY-MM-DD(eg: 2000-01-01)")
 
 while True:
     try:
-        d1 = input("Enter 1st date(0 to exit)").strip()
-        if d1 == "0":break 
-        d2 = input("Enter 2nd date").strip() 
+        print("Enter Dates or 0 to exit:")
+        d1 = input(">>>  ").strip()
+        if d1 == "0" :break 
+        d2 = input(">>>  ").strip() 
+        if d2 == "0":break 
 
         date_1 = datetime.strptime(d1,"%Y-%m-%d")
         date_2 = datetime.strptime(d2,"%Y-%m-%d")

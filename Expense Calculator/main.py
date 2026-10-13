@@ -1,4 +1,20 @@
 import os
+
+def add_expense():
+    while True:
+        name = input("Enter name of expense: ")
+        expense = int(input("Enter amount of expense: "))
+        date = input("Enter Date(YYYY-MM-DD): ")
+
+        store.append((name,expense,date))
+        
+        exi_t = input("Are you want to add more(y/n): ")
+
+        if exi_t == "n":
+            break
+
+        
+def show_report():pass
 print("="*12)
 print("Expense calculator")
 print("="*12)
@@ -6,24 +22,13 @@ print("="*12)
 store = []
 
 
-while True:
-    name = input("Enter name of expense: ")
-    expense = int(input("Enter amount of expense: "))
-    date = input("Enter Date(YYYY-MM-DD): ")
-
-    store.append((name,expense,date))
-    
-    exi_t = input("Are you want to add more(y/n): ")
-
-    if exi_t == "n":
-        break
 
 
 
-if not os.path.exists("data"):
-    os.mkdir("data")
+if not os.path.exists("Expense Calculator/data"):
+    os.mkdir("Expense Calculator/data")
 
-with open("data/data.txt","a") as f:
+with open("Expense Calculator/data/data.txt","a") as f:
     for i in store:
         f.write(f"{i[0]}: {i[1]}\n -------------------------------------\n")
 

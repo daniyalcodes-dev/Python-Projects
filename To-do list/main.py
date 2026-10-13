@@ -1,67 +1,80 @@
-# Simple TO DO list
+# This is simple to-do list
 
 tasks = []
 
-def load_tasks():
+def main():
+    print("=-=" * 12)
+    print("-=-" * 12)
+    print("TO-DO List")
+    print("-=-" * 12)
+    print("=-=" * 12)
+
+    tasks = load()
+
+    while True:
+        user = input(
+            "Please enter your choice\n"
+            "1. Add task\n"
+            "2. Show task\n"
+            "3. Delete task\n"
+            "0. Exit\n"
+            ">>> "
+        )
+
+        if user == "0":
+            break
+        elif user == "1":
+            add_task(tasks)
+        elif user == "2":
+            show_task(tasks)
+        elif user == "3":
+            rm_task(tasks)
+        else:
+            print("Please enter a valid number.\n")
+
+
+def load():
     try:
-        with open("tasks.txt") as file:
+        with open("To-do list.txt") as file:
             return file.read().splitlines()
-    except:
-        return {}    
-
-def save_tasks(tasks):
-    with open("Tasks.txt" , 'w') as file:
+    except FileNotFoundError:
+        return []
+    
+def save(tasks):
+    with open("To-do list.txt","w") as file:
         for task in tasks:
-            file.write(task + "\n")
+            file.write(f"{task}\n")
 
-task = load_tasks 
+ 
+def add_task(tasks):
+    user = input("Enter the task: ")
+    tasks.append(user)
+    save(tasks)
 
-while True:
-    print("==============================")
-    print("----------To do list----------")
-    print("==============================")
-    print("\n1. Add task", flush=True)
-    print("2. Show tasks", flush=True)
-    print("3. Delete task", flush=True)
-    print("4. Exit", flush=True)
-
-    choice = input("\nEnter your choice: ")
-
-    if choice == "1":
-        task = input("\nEnter task: ")
-        tasks.append(task)
-        save_tasks(tasks)
-        print("Task successfully added😎.", flush=True)
-
-    elif choice == "2":
-        if len(tasks) == 0:
-            print("\nThere is no task added.",flush=True)
-        else:
-            print("Your tasks")
-            for i in range(len(tasks)):
-                print(f"{i+1} .{tasks[i]} ", flush=True)
-
-    elif choice == "3":            
-        if len(tasks) == 0:
-            print("\nThere is no task added.",flush=True)
-        else:
-            print("Your tasks")
-            for i in range(len(tasks)):
-                print(f"{i+1} .{tasks[i]} ", flush=True)
-
-            num = int(input("Enter your choice: "))    
-            if num >= 1 and num <= len(tasks):
-                tasks.pop(num - 1)
-                save_tasks(tasks)
-                print("\nloading..........", flush=True)
-                print("\nTask deleted!", flush=True)
-                print(tasks)
-            else:
-                print("Invalid choice!",flush=True)
-
-    elif choice == "4":
-        print("Good bye👋", flush=True)
-        break        
-
+def show_task(tasks):
+    if len(tasks) == 0:
+        print("No tasks added!")
     else:
-        print("Invalid choice")    
+        for no in range(len(tasks)):
+            print(f"{no + 1} : {tasks[no]}")
+   
+def rm_task(tasks):
+    if len(tasks) == 0:
+        print("No tasks added!")
+    else:
+        show_task(tasks)
+        try:
+            num = int(input("Enter the Choice(number)>>> "))
+            if 1 <= num <= len(tasks):
+                tasks.pop(num-1)
+                save(tasks)
+                print("Task deleted")
+
+            else:
+                print("Invalid Choice")
+        except ValueError:
+            print("Please enter a number")
+
+            
+if __name__ == "__main__":  
+    main()

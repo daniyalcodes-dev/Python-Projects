@@ -1,143 +1,75 @@
-import json
-import os
-from datetime import datetime
+from functions import Bank
 
-class Account:
-    def __init__(self,name,acc_no,balance = 0):
-        self.name = name
-        self.acc_no = acc_no
-        self.balance = balance
-        self.Created_at = datetime.now().strftime("%B %d, %Y")
-
-    
-    def Withdraw(self,amount):
-        if amount <= 0:
-            raise ValueError
-        if amount > self.balance:
-            raise ValueError("Insufficient balance")
-        self.balance -= amount
-    
-    def Deposit(self,amount):
-        if amount <= 0:
-            raise ValueError
-        self.balance  += amount
-
-    def Transfer(self,amount,reciever):
-        self.Withdraw(amount)
-        reciever.Deposit(amount)
-    
-    def to_dict(self):
-        return {
-            "Name" : self.name,
-            "Account Number" : self.acc_no,
-            "Balance" : self.balance,
-            "Date" : self.Created_at
-        }
-    
-    def __str__(self):
-        return f"[{self.acc_no} {self.name} Balence - {self.balance:.2f}]"
-    
-class Bank:
-    File = "DATA.json"
-    def __init__(self):
-        self.accounts = {}
-        self.Load()
-
-    def Save(self):
-        with open(self.File,"w") as f:
-            json.dump(
-                {k : v.to_dict() for k,v in self.accounts.items()},f, indent = 2
-            )
-    
-    def Load(self):
-        data = {}
-        if os.path.exists(self.File):
-            try:
-                with open(self.File) as f:
-                    data = json.load(f)
-                for k,v in data.items():
-                    self.accounts[k] = Account(v["Name"] , v["Account Number"], v["Balance"])
-
-            except json.JSONDecodeError:
-                self.data = {}
-        
-    def Create_Account(self,name):
-        acc_no = str(1000 + 1 + len(self.accounts))
-        acco = Account(name, acc_no)
-        self.accounts[acc_no] = acco
-        self.Save()
-        print(f"Dear {name} \nYour account has created. Your account number is {acc_no}")
-
-    def Get_Account(self,acc_no):
-        acco = self.accounts.get(acc_no)
-        if not acco:
-            raise KeyError
-        return acco
-    
-    def Withdraw_Amount(self,amount,acc_no):
-        acco = self.Get_Account(acc_no)
-        acco.Withdraw(amount)
-        self.Save()
-        print(f"Withdraw {amount} \nNew balance: {acco.balance:.2f}")
-
-    def Deposit_Amount(self,amount,acc_no):
-        acco = self.Get_Account(acc_no)
-        acco.Deposit(amount)
-        self.Save()
-        print(f"Deposit {amount} \nNew balance: {acco.balance:.2f}")
-    
-    def Check_Account(self,acc_no):
-        acco = self.Get_Account(acc_no)
-        print(acco)
-
-    def Transfer_Amount(self,amount,sender,rec):
-        sen = self.Get_Account(sender)
-        reciever = self.Get_Account(rec)
-        sen.Transfer(amount,reciever)
-        self.Save()
-        print(f"Amount {amount} transfer from {sender} to {rec}")
+bank = Bank()
 
 
 def main():
-    bank = Bank()
     while True:
-        print("1. Create account")
-        print("2. Withdraw")
-        print("3. Deposit")
-        print("4. Check balance")
-        print("5. Transfer")
-        print("0. Exit")
-    
+        print("\n" + "=-=" * 12)
+        print("       BANK MANAGEMENT SYSTEM")
+        print("=-=" * 12)
+        print("1. Create Account")
+        print("2. Deposit Money")
+        print("3. Withdraw Money")
+        print("4. Transfer Money")
+        print("5. Account Details")
+        print("6. Exit")
+        print("=-=" * 12)
+
+        choice = input("Enter your choice: ").strip()
+
         try:
-            choice = int(input(">>> "))
-            if choice == 1:
-                name = input("Name: ")
-                bank.Create_Account(name)
+            if choice == "1":
+                name = input("Enter your name: ").strip()
+                pin = input("Create your PIN: ").strip()
 
-            elif choice == 2:
-                amount = float(input("Amount: "))
-                acc_no = input("Account number")
-                bank.Withdraw_Amount(amount,acc_no)
-            elif choice == 3:
-                amount = float(input("Amount: "))
-                acc_no = input("Account number")
-                bank.Deposit_Amount(amount,acc_no)
+                if not name or not pin:
+                    print("Name and PIN cannot be empty!")
+                    continue
 
-            elif choice == 4:
-                acc_no = input("Account Number: ")
-                bank.Check_Account(acc_no)
-            elif choice == 5:
-                amount = float(input(">>> "))
-                sender = input("Enter sender account number: ")
-                rec = input("Enter reciever account number: ")
-                bank.Transfer_Amount(amount,sender,rec)
-            elif choice == 0:
+                bank.create_account(name, pin)
+
+            elif choice == "2":
+                account_number = input("Enter account number: ").strip()
+                amount = float(input("Enter deposit amount: "))
+
+                bank.deposit_amount(account_number, amount)
+
+            elif choice == "3":
+                account_number = input("Enter account number: ").strip()
+                amount = float(input("Enter withdrawal amount: "))
+
+                bank.withdraw_amount(account_number, amount)
+
+            elif choice == "4":
+                sender = input("Enter your account number: ").strip()
+                receiver = input("Enter receiver account number: ").strip()
+                amount = float(input("Enter transfer amount: "))
+
+                bank.transfer_amount(sender, receiver, amount)
+                bank.save()
+                print("Transfer completed successfully!")
+
+            elif choice == "5":
+                account_number = input("Enter account number: ").strip()
+
+                if bank.get_user(account_number):
+                    if bank.check_pin(account_number):
+                        bank.details(account_number)
+
+            elif choice == "6":
+                print("Thank you for using our banking system!")
                 break
-            else:
-                raise ValueError
 
-        except (ValueError,TypeError) as e:
-            print("Error: ", e)
+            else:
+                print("Invalid choice! Select 1 to 6.")
+
+        except ValueError as error:
+            print(f"Invalid input: {error}")
+
+        except (OSError, TypeError, KeyError) as error:
+            print(f"An error occurred: {error}")
+
 
 if __name__ == "__main__":
     main()

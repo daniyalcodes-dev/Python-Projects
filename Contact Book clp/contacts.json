@@ -1,1 +1,28 @@
-[{"name": "ali", "phone": "0945848565315649", "email": "456464562"}]
+
+[
+    {
+        "Name": "ali",
+        "Contact number": "03001234567",
+        "Email": "ali@gmail.com"
+    },
+    {
+        "Name": "ahmed",
+        "Contact number": "03111234567",
+        "Email": "ahmed@gmail.com"
+    },
+    {
+        "Name": "hassan",
+        "Contact number": "03221234567",
+        "Email": "hassan@gmail.com"
+    },
+    {
+        "Name": "usman",
+        "Contact number": "03331234567",
+        "Email": "usman@gmail.com"
+    },
+    {
+        "Name": "bilal",
+        "Contact number": "03451234567",
+        "Email": "bilal@gmail.com"
+    }
+]

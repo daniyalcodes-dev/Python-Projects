@@ -8,6 +8,10 @@ print("Its is a simple calculator")
 print("Type Exit to exit calculator")
 print("Otherwise start your operation")
 
+"""
+while True:
+    print(eval(input(">>> ")))
+"""
 
 while True:
     
